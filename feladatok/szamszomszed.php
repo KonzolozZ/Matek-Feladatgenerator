@@ -47,6 +47,9 @@ for ($p = 0; $p < $oldalak_szama; $p++) {
         </style>';
     }
     
+    // MÓDOSÍTÁS: Kivettem a duplikált <h5> címsort.
+    // A lenti JS kód fogja hozzáadni a léptéket a főcímhez.
+    
     $html .= '<div class="row">';
     
     // Generálunk 24 feladatot erre az oldalra
@@ -128,7 +131,23 @@ for ($p = 0; $p < $oldalak_szama; $p++) {
 
     $html .= '</div>'; // row vége
 
+    // Cím módosítása JS-el, hogy elegáns legyen
+    // Mivel az index.php fixen írja ki a $oldal_cim-et, utólag kliens oldalon írjuk hozzá.
+    $html .= "
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Megkeressük az összes h3-as címet a worksheet-en belül
+            var titles = document.querySelectorAll('.worksheet h3');
+            titles.forEach(function(title) {
+                if (title.textContent.includes('Számszomszédok') && !title.textContent.includes('lépték')) {
+                    title.innerHTML += ' <small class=\"text-muted\">({$szomszed_leptek}-es lépték)</small>';
+                }
+            });
+        });
+    </script>
+    ";
+
     $feladat_oldalak[] = $html;
 }
 
-/* Utolsó módosítás: 2026. január 10. 22:30:00 */
+/* Utolsó módosítás: 2026. január 20. 10:07:00 */
