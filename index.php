@@ -13,13 +13,14 @@ $mappa = 'feladatok/';
 $aktualis_feladat = isset($_GET['tipus']) ? $_GET['tipus'] : 'osszeadas';
 
 // Engedélyezett feladatok listája
-// MÓDOSÍTÁS: Hozzáadva a számszomszéd
+// MÓDOSÍTÁS: Hozzáadva a mertekegyseg
 $engedelyezett_feladatok = [
     'osszeadas'    => 'Több tényezős összeadás',
     'osztas'       => 'Maradékos osztás',
     'szorzas'      => 'Szorzás gyakorlása',
     'kerekites'    => 'Kerekítés gyakorlása',
-    'szamszomszed' => 'Számszomszédok'
+    'szamszomszed' => 'Számszomszédok',
+    'mertekegyseg' => 'Mértékegységek'
 ];
 
 if (!array_key_exists($aktualis_feladat, $engedelyezett_feladatok)) {
@@ -31,12 +32,14 @@ $oldal_cim = $engedelyezett_feladatok[$aktualis_feladat];
 
 // --- FUNKCIÓK TÁMOGATÁSA (Konfiguráció) ---
 // Itt határozzuk meg, hogy melyik feladathoz milyen gombok legyenek aktívak
+// MÓDOSÍTÁS: A mertekegyseg-nél engedélyeztük a szuper_konnyu módot is
 $funkcio_tamogatas = [
     'osszeadas'    => ['nehezebb' => true,  'szuper_konnyu' => true],
     'osztas'       => ['nehezebb' => true,  'szuper_konnyu' => false],
     'szorzas'      => ['nehezebb' => true,  'szuper_konnyu' => false],
     'kerekites'    => ['nehezebb' => false, 'szuper_konnyu' => false],
     'szamszomszed' => ['nehezebb' => false, 'szuper_konnyu' => false],
+    'mertekegyseg' => ['nehezebb' => true,  'szuper_konnyu' => true],
 ];
 
 // Lekérdezzük, hogy az aktuális feladat támogatja-e az adott funkciókat
@@ -265,17 +268,33 @@ if (file_exists($fajl_utvonal)) {
             successAlert.style.display = 'none';
             errorAlert.style.display = 'none';
             
+            // Text típusú inputokat is kezeljük (pl. < > = jelek)
             const inputsToCheck = document.querySelectorAll('input[data-correct]');
             let hibasCount = 0;
 
             inputsToCheck.forEach(input => {
                 input.classList.remove('hiba');
-                const userVal = parseInt(input.value);
-                const correctVal = parseInt(input.dataset.correct);
+                
+                // Érték tisztítása és összehasonlítása
+                const userVal = input.value.trim();
+                const correctVal = input.dataset.correct.toString().trim();
 
-                if (isNaN(userVal) || userVal !== correctVal) {
-                    input.classList.add('hiba');
-                    hibasCount++;
+                // Ha szám, akkor numerikusan, ha szöveg (pl. < >), akkor stringként
+                if (userVal === '') {
+                     input.classList.add('hiba');
+                     hibasCount++;
+                } else if (!isNaN(userVal) && !isNaN(correctVal)) {
+                    // Szám esetén
+                    if (Number(userVal) !== Number(correctVal)) {
+                        input.classList.add('hiba');
+                        hibasCount++;
+                    }
+                } else {
+                    // String (reláció jel) esetén
+                    if (userVal !== correctVal) {
+                        input.classList.add('hiba');
+                        hibasCount++;
+                    }
                 }
             });
 
@@ -305,4 +324,4 @@ if (file_exists($fajl_utvonal)) {
 </script>
 </body>
 </html>
-<?php /* Utolsó módosítás: 2026. január 10. 22:30:00 */ ?>
+<?php /* Utolsó módosítás: 2026. január 20. 09:09:00 */ ?>
