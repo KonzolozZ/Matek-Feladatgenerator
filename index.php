@@ -13,14 +13,15 @@ $mappa = 'feladatok/';
 $aktualis_feladat = isset($_GET['tipus']) ? $_GET['tipus'] : 'osszeadas';
 
 // Engedélyezett feladatok listája
-// MÓDOSÍTÁS: Hozzáadva a mertekegyseg
+// MÓDOSÍTÁS: Hozzáadva az alapmuveletek
 $engedelyezett_feladatok = [
     'osszeadas'    => 'Több tényezős összeadás',
     'osztas'       => 'Maradékos osztás',
     'szorzas'      => 'Szorzás gyakorlása',
     'kerekites'    => 'Kerekítés gyakorlása',
     'szamszomszed' => 'Számszomszédok',
-    'mertekegyseg' => 'Mértékegységek'
+    'mertekegyseg' => 'Mértékegységek',
+    'alapmuveletek'=> 'Alapvető műveletek'
 ];
 
 if (!array_key_exists($aktualis_feladat, $engedelyezett_feladatok)) {
@@ -32,7 +33,7 @@ $oldal_cim = $engedelyezett_feladatok[$aktualis_feladat];
 
 // --- FUNKCIÓK TÁMOGATÁSA (Konfiguráció) ---
 // Itt határozzuk meg, hogy melyik feladathoz milyen gombok legyenek aktívak
-// MÓDOSÍTÁS: A mertekegyseg-nél engedélyeztük a szuper_konnyu módot is
+// MÓDOSÍTÁS: alapmuveletek-nél a szuper_konnyu engedélyezve
 $funkcio_tamogatas = [
     'osszeadas'    => ['nehezebb' => true,  'szuper_konnyu' => true],
     'osztas'       => ['nehezebb' => true,  'szuper_konnyu' => false],
@@ -40,6 +41,7 @@ $funkcio_tamogatas = [
     'kerekites'    => ['nehezebb' => false, 'szuper_konnyu' => false],
     'szamszomszed' => ['nehezebb' => false, 'szuper_konnyu' => false],
     'mertekegyseg' => ['nehezebb' => true,  'szuper_konnyu' => true],
+    'alapmuveletek'=> ['nehezebb' => true,  'szuper_konnyu' => true],
 ];
 
 // Lekérdezzük, hogy az aktuális feladat támogatja-e az adott funkciókat
@@ -324,4 +326,4 @@ if (file_exists($fajl_utvonal)) {
 </script>
 </body>
 </html>
-<?php /* Utolsó módosítás: 2026. január 20. 09:09:00 */ ?>
+<?php /* Utolsó módosítás: 2026. február 10. 21:40:00 */ ?>
